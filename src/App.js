@@ -1,25 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import Axios from 'axios';
+import Char from './char'
+import { useEffect, useState } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [charactersData, setCharData] = useState([]);
+  useEffect(() => {
+    Axios.get('https://rickandmortyapi.com/api/character').then((res) => {
+      const l = res.data.results.map(el => {
+        return ({
+          id: el.id,
+          name: el.name,
+          img: el.image
+        })
+      })
+      setCharData(l)
+    })
+  }, []);
+
+  return <div className="App">{charactersData.map(el => <Char name={el.name} img={el.img} />)}</div>
+
 }
 
 export default App;
